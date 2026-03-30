@@ -25,8 +25,6 @@ Cloud-native parcel tracking system built with Flask and AWS.
 ```bash
 pip install -r requirements.txt
 python app.py
-
-
 gunicorn --bind 0.0.0.0:8080 --workers 4 --threads 2 app:app
 
 
@@ -38,3 +36,21 @@ SQS
 Lambda
 SNS
 CloudWatch
+
+## Architecture Overview
+
+Client → Flask API (EC2 + Gunicorn) → DynamoDB / S3  
+                             ↓  
+                           SQS  
+                             ↓  
+                          Lambda  
+                             ↓  
+                           SNS (Email)
+
+## Concurrency
+
+The application uses Gunicorn with multiple workers and threads:
+
+```bash
+gunicorn --bind 0.0.0.0:8080 --workers 4 --threads 2 app:app
+
